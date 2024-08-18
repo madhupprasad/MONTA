@@ -1,39 +1,26 @@
 import { LoaderFunction } from "@remix-run/node";
-import { useLoaderData, useParams } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { api } from "convex/_generated/api";
 import { useMutation } from "convex/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { convex } from "utils/convex-client";
 
 export const loader: LoaderFunction = async ({ params }) => {
   const data = await convex.query(api.Notes.getById, {
     id: params.lockerId,
   });
-  return { init_content: data.content };
+  return {
+    init_content: data.content,
+    lockerId: params.lockerId,
+    title: data.title,
+  };
 };
 
 export default function Locker() {
-  const { init_content } = useLoaderData<typeof loader>();
+  const { init_content, lockerId, title } = useLoaderData<typeof loader>();
+
   const editorRef = useRef<HTMLDivElement>(null);
-  const [content, setContent] = useState(init_content);
   const saveData = useMutation(api.Notes.updateLocker);
-  const { lockerId } = useParams();
-
-  const handleChange = useCallback(() => {
-    if (editorRef.current) {
-      setContent(editorRef.current.innerHTML);
-    }
-  }, []);
-
-  useEffect(() => {
-    const editor = editorRef.current;
-    if (editor) {
-      editor.addEventListener("input", handleChange);
-      return () => {
-        editor.removeEventListener("input", handleChange);
-      };
-    }
-  }, [handleChange]);
 
   // Debounce function to limit how often we save
   const debounce = (func, delay: number) => {
@@ -46,21 +33,32 @@ export default function Locker() {
 
   // Debounced save function
   const debouncedSave = useCallback(
-    debounce((content: string) => {
-      console.log("Saving content:", content);
-      //   save
-      saveData({ id: lockerId, content });
+    debounce((id, content: string, title: string) => {
+      console.log("before save is called to:", title, "with content", content);
+      saveData({ id, content });
     }, 500),
     []
   );
 
-  // Effect to trigger save when content changes
+  const handleChange = useCallback(() => {
+    if (editorRef.current) {
+      debouncedSave(lockerId, editorRef.current.innerHTML, title);
+    }
+  }, [lockerId, debouncedSave]);
+
   useEffect(() => {
-    debouncedSave(content);
-  }, [content, debouncedSave]);
+    const editor = editorRef.current;
+    if (editor) {
+      editor.addEventListener("input", handleChange);
+      return () => {
+        editor.removeEventListener("input", handleChange);
+      };
+    }
+  }, [handleChange]);
 
   // Effect to set initial content
   useEffect(() => {
+    console.log("init_content of ", title, "is", init_content);
     if (editorRef.current) {
       editorRef.current.innerHTML = init_content;
     }
