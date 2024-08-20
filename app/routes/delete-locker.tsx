@@ -1,4 +1,4 @@
-import { ActionFunction, json } from "@remix-run/node";
+import { ActionFunction, json, redirect } from "@remix-run/node";
 import { api } from "convex/_generated/api";
 import { Id } from "convex/_generated/dataModel";
 import { convex } from "utils/convex-client";
@@ -15,7 +15,7 @@ export const action: ActionFunction = async ({ request }) => {
     await convex.mutation(api.Notes.deleteLocker, {
       id: id as Id<"Notes">,
     });
-    return json({ success: true });
+    return redirect("/lockers");
   } catch (error) {
     return json({ error: error.message }, { status: 500 });
   }

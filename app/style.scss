@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=VT323);
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -13,12 +14,11 @@ body {
   color: #121212;
   font-family: "VT323", monospace;
 }
-
 input {
   width: 100%;
 }
 
-.btn, .btn-sider-1 {
+.btn {
   background: #7c7c7c;
   border-bottom: 6px inset rgba(0, 0, 0, 0.5);
   border-left: 6px inset rgba(0, 0, 0, 0.5);
@@ -29,9 +29,11 @@ input {
   cursor: pointer;
   width: auto;
   text-align: center;
-}
-.btn:focus, .btn-sider-1:focus, .btn:hover, .btn-sider-1:hover {
-  background: #bcbcbc;
+
+  &:focus,
+  &:hover {
+    background: #bcbcbc;
+  }
 }
 
 .sider-1 {
@@ -43,6 +45,8 @@ input {
 }
 
 .btn-sider-1 {
+  // inherit .btn
+  @extend .btn;
   width: 100%;
   margin-bottom: 5px;
   font-size: 20px;
@@ -86,5 +90,3 @@ input {
   width: 590px;
   font-size: 20px;
 }
-
-/*# sourceMappingURL=style.css.map */

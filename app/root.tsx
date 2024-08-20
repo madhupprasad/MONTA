@@ -8,7 +8,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import "./tailwind.css";
-import "./style.css";
+import "./style.scss";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { useState } from "react";
 

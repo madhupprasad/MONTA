@@ -74,18 +74,16 @@ export default function Index() {
       </div>
       {/* side 2 */}
       <div className="sider-2">
-        <Form method="post" className="flex">
+        <Form method="post" className="flex items-center">
           <input
-            placeholder="cmd + k"
+            placeholder="press enter to save"
             ref={inputRef}
             className="input-sider-2"
             type="text"
             name="title"
             disabled={isSubmitting}
           />
-          <button className="btn-sider-2" type="submit">
-            {isSubmitting ? "..." : "+"}
-          </button>
+          <button className="invisible" type="submit" />
         </Form>
         {data === undefined
           ? "loading..."
@@ -114,8 +112,9 @@ export default function Index() {
                   <button
                     type="submit"
                     disabled={deleteFetcher.state === "submitting"}
+                    className="mr-2 text-red-500"
                   >
-                    <DeleteIcon width={20} height={20} />
+                    x{" "}
                   </button>
                 </deleteFetcher.Form>
               </div>
