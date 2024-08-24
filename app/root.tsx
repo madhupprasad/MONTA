@@ -11,9 +11,14 @@ import "./tailwind.css";
 import "./style.scss";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import { useState } from "react";
+import { requireAuth } from "./utils/auth.server";
 
-export async function loader() {
+export async function loader({ request }: { request: Request }) {
   const CONVEX_URL = process.env["CONVEX_URL"]!;
+  const url = new URL(request.url);
+  if (url.pathname !== "/" && !url.pathname.startsWith("/logout")) {
+    await requireAuth(request);
+  }
   return json({ ENV: { CONVEX_URL } });
 }
 

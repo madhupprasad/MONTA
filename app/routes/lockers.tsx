@@ -13,7 +13,12 @@ import { useQuery } from "convex/react";
 import { useEffect, useRef } from "react";
 import { convex } from "utils/convex-client";
 import { SiderButton, siderButtonList } from "~/data";
-import DeleteIcon from "~/icons/deleteIcon.svg?react";
+import { requireAuth } from "~/utils/auth.server";
+
+export const loader = async ({ request }: { request: Request }) => {
+  await requireAuth(request);
+  return null;
+};
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -40,6 +45,7 @@ export default function Index() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const deleteFetcher = useFetcher();
+  const logoutFetcher = useFetcher();
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -71,6 +77,12 @@ export default function Index() {
             {button.displayName}
           </div>
         ))}
+        {/* logout form */}
+        <logoutFetcher.Form method="post" action="/logout">
+          <button className="absolute bottom-4" type="submit">
+            exit
+          </button>
+        </logoutFetcher.Form>
       </div>
       {/* side 2 */}
       <div className="sider-2">

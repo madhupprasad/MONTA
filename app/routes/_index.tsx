@@ -67,15 +67,6 @@ export default function Index() {
       <div className="errors">
         {actionData?.error ? actionData?.error?.message : "-"}
       </div>
-
-      {/* <div className="space-x-4">
-        <Link
-          to="/lockers"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Manage Notes
-        </Link>
-      </div> */}
     </div>
   );
 }

@@ -128,7 +128,7 @@ export const sessionLogout = async (request) => {
       return admin.auth().revokeRefreshTokens(decodedClaims?.sub);
     })
     .then(async () => {
-      return redirect("/login", {
+      return redirect("/", {
         headers: {
           "Set-Cookie": await destroySession(session),
         },
